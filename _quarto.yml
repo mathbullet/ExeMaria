@@ -9,6 +9,11 @@ website:
       - href: index.qmd
         text: Home
       - about.qmd
+  sidebar:
+    search: true
+    contents:
+      href: llm-coding/aisuite-tutorial.qmd
+      text: aisuiteチュートリアル
 
 format:
   html:
