@@ -1,6 +1,11 @@
 ---
 title: "aisuite --- 複数のLLMを最小の労力で動かす"
 jupyter: python3
+author: mathbullet
+format:
+  html:
+    toc: true
+    code-fold: false
 ---
 
 このノートブックでは、LLMとのCUIベースの対話において、**LLMプロバイダの切り替え**にかかる労力を最小化するライブラリ、[aisuite](https://github.com/andrewyng/aisuite/tree/main)について説明します。

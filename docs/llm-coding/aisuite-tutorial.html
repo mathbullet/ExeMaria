@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="mathbullet">
 
 <title>aisuite — 複数のLLMを最小の労力で動かす</title>
 <style>
@@ -71,10 +72,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#背景" id="toc-背景" class="nav-link active" data-scroll-target="#背景">背景</a></li>
+  <li><a href="#aisuite" id="toc-aisuite" class="nav-link" data-scroll-target="#aisuite">aisuite</a></li>
+  <li><a href="#補足" id="toc-補足" class="nav-link" data-scroll-target="#補足">補足</a></li>
+  </ul>
+</nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -86,6 +97,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>mathbullet </p>
+          </div>
+  </div>
     
   
     
@@ -105,7 +122,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    langchain <span class="dt">\</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    langchain-anthropic <span class="dt">\</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    langchain-openai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="ade22286" class="cell" data-execution_count="1">
+<div id="c246c40b" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># AnthropicのClaude 3 Opusを使用する場合</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> langchain_anthropic <span class="im">import</span> ChatAnthropic</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -113,10 +130,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> model.invoke(<span class="st">"こんにちは！あなたは誰ですか？"</span>)</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>はじめまして！私はAnthropic社が開発した人工知能アシスタントのClaudeです。人間とのコミュニケーションを通じて、知識を共有したり課題解決のお手伝いをすることを目的としています。よろしくお願いします！</code></pre>
+<pre><code>はじめまして！私はAnthropicという会社が開発した人工知能のアシスタントです。様々な知識を持っていて、人間とのコミュニケーションを通じて会話を楽しんだり、質問に答えたり、タスクのお手伝いをしたりできます。でも私はあくまでもAIであって人間ではありません。どんなことでも気軽に話しかけてくださいね。よろしくお願いします！</code></pre>
 </div>
 </div>
-<div id="653dec09" class="cell" data-execution_count="2">
+<div id="ef320846" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># OpenAIのGPT-4oを使用する場合</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> langchain_openai <span class="im">import</span> ChatOpenAI</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -124,7 +141,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> model.invoke(<span class="st">"こんにちは！あなたは誰ですか？"</span>)</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>こんにちは！私はAIアシスタントです。何かお手伝いできることがあれば教えてください。</code></pre>
+<pre><code>こんにちは！私はOpenAIが開発したAIアシスタントです。情報を提供したり、質問に答えたり、さまざまなタスクを手伝ったりすることができます。何かお手伝いできることがあれば教えてください！</code></pre>
 </div>
 </div>
 <p>ここでは実行はしませんが、HuggingFaceのモデルを使う場合はさらに差分が大きくなります。</p>
@@ -146,48 +163,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>それではaisuiteを触ってみましょう。以下コマンドでインストールします。</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="st">'aisuite[all]'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>先ほどと同じように、複数プロバイダのLLMを使用するとき、プロバイダごとに別途用意する必要があるのは<code>{プロバイダ名}:{モデル名}</code>という形式の文字列のみです。</p>
-<div id="0baa7ebf" class="cell" data-execution_count="3">
+<div id="daed8fd6" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>claude3opus <span class="op">=</span> <span class="st">"anthropic:claude-3-opus-20240229"</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>gpt4o <span class="op">=</span> <span class="st">"openai:gpt-4o"</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># zephyr = "huggingface:HuggingFaceH4/zephyr-7b-beta"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>どのプロバイダのどのモデルを使うとしても、モデルからの応答を得る方法は同じです。まずは<code>Client</code>というクラスのインスタンスを作成します。</p>
-<div id="04b15576" class="cell" data-execution_count="4">
+<div id="1d074598" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> aisuite</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> aisuite.Client()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>併せて、モデルに入力するメッセージも作成しておきます。</p>
-<div id="ffe173f0" class="cell" data-execution_count="5">
+<div id="fb7eed0c" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>messages <span class="op">=</span> [</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"こんにちは！あなたは誰ですか？"</span>}</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>そして、<code>client.chat.completions.create</code>というメソッドによってメッセージの送信を行います。</p>
 <p>Claudeを使う場合は以下のようになります。</p>
-<div id="d1eab600" class="cell" data-execution_count="6">
+<div id="baedd63d" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.chat.completions.create(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>claude3opus,</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>messages</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.choices[<span class="dv">0</span>].message.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>はじめまして！私はAnthropicが開発した人工知能アシスタントのClaudeと申します。よろしくお願いします。
-
-私は人間との対話を通じて、様々なタスクの支援をする目的で作られました。知識を持ち、論理的に考えることができますが、人間のように感情を持っているわけではありません。あくまでもAIですので、そこは理解していただけると嬉しいです。
-
-でも、フレンドリーに会話をしたり、ユーザーの皆さまのお役に立てるよう頑張ります。どうぞ気軽に話しかけてくださいね。一緒に楽しく有意義な時間を過ごせたら嬉しいです！</code></pre>
+<pre><code>はじめまして。私はAnthropic社が開発した人工知能アシスタントのClaudeです。人間のみなさまのお手伝いをするために作られました。知識を使って質問に答えたり、文章を書いたり翻訳したりタスクをこなすことができます。でも私は人工知能なので人間のような感情はありません。よろしくお願いします！</code></pre>
 </div>
 </div>
 <p>GPT-4oを使う場合は以下のようになります。</p>
-<div id="a2f01f64" class="cell" data-execution_count="7">
+<div id="c68b670c" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.chat.completions.create(</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>gpt4o,</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>messages</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.choices[<span class="dv">0</span>].message.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>こんにちは！私はAIアシスタントです。お手伝いできることがあれば教えてください。どんな質問やリクエストでも歓迎です！</code></pre>
+<pre><code>こんにちは！私はOpenAIが開発したAIモデルで、皆さんの質問に答えたり、情報を提供したり、会話を楽しんだりするためのものです。どうぞよろしくお願いします！何かお手伝いできることがあれば教えてください。</code></pre>
 </div>
 </div>
 <p>ここで、両者が異なるのは<code>model</code>の値のみである点に注目してください。プロバイダやモデルを変えたい場合はここを書き換えるだけでよく、差分が最小化されていることがわかります。</p>
