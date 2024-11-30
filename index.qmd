@@ -2,4 +2,4 @@
 title: "ExeMaria"
 ---
 
-mathbullet in text modality
+サイバネティック・ユニバーサルエデュケーションテキストブック
