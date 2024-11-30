@@ -1,1 +1,118 @@
-# aisuite --- 複数のLLMを最小の労力で動かす
+---
+title: "aisuite --- 複数のLLMを最小の労力で動かす"
+jupyter: python3
+---
+
+このノートブックでは、LLMとのCUIベースの対話において、**LLMプロバイダの切り替え**にかかる労力を最小化するライブラリ、[aisuite](https://github.com/andrewyng/aisuite/tree/main)について説明します。
+
+## 背景
+
+HuggingFace TransformersやLangChainといった既存のライブラリを使ってLLMにプロンプトを入力し、出力結果を得ることは可能です。しかし、**これらのライブラリは使用するLLMのモデルやプロバイダによってインポートすべきクラスや必要な前後処理が異なる場合があり、これが若干の手間になっています**。
+
+例えばLangChain v.0.3では、LLMのプロバイダごとに異なるパッケージが用意されています。そのため、プロバイダごとにパッケージをインストールし、**プロバイダごとに異なるコードでLLMと対話することになります**。Anthropic、OpenAIのモデルの出力を比較をしたい、という時は、以下のような手順を踏む必要があります。
+
+``` sh
+pip install \
+    langchain \
+    langchain-anthropic \
+    langchain-openai
+```
+
+```{python}
+# AnthropicのClaude 3 Opusを使用する場合
+from langchain_anthropic import ChatAnthropic
+
+model = ChatAnthropic(model="claude-3-opus-20240229")
+response = model.invoke("こんにちは！あなたは誰ですか？")
+print(response.content)
+```
+
+```{python}
+# OpenAIのGPT-4oを使用する場合
+from langchain_openai import ChatOpenAI
+
+model = ChatOpenAI(model="gpt-4o")
+response = model.invoke("こんにちは！あなたは誰ですか？")
+print(response.content)
+```
+
+ここでは実行はしませんが、HuggingFaceのモデルを使う場合はさらに差分が大きくなります。
+
+``` sh
+pip install langchain-huggingface
+```
+
+``` python
+from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
+
+llm = HuggingFaceEndpoint(
+    repo_id="HuggingFaceH4/zephyr-7b-beta",
+    max_new_tokens=256,
+)
+
+model = ChatHuggingFace(llm=llm)
+response = model.invoke("こんにちは！あなたは誰ですか？")
+print(response.content)
+```
+
+
+毎度使うモデルやプロバイダが変わるたびにコードの書き心地が変わるより、全て統一のインターフェースで使える方がいいよね、というのがaisuiteのモチベーションです。
+
+## aisuite
+
+それではaisuiteを触ってみましょう。以下コマンドでインストールします。
+
+``` sh
+pip install 'aisuite[all]'
+```
+
+先ほどと同じように、複数プロバイダのLLMを使用するとき、プロバイダごとに別途用意する必要があるのは`{プロバイダ名}:{モデル名}`という形式の文字列のみです。
+
+```{python}
+claude3opus = "anthropic:claude-3-opus-20240229"
+gpt4o = "openai:gpt-4o"
+# zephyr = "huggingface:HuggingFaceH4/zephyr-7b-beta"
+```
+
+どのプロバイダのどのモデルを使うとしても、モデルからの応答を得る方法は同じです。まずは`Client`というクラスのインスタンスを作成します。
+
+```{python}
+import aisuite
+
+client = aisuite.Client()
+```
+
+併せて、モデルに入力するメッセージも作成しておきます。
+
+```{python}
+messages = [
+    {"role": "user", "content": "こんにちは！あなたは誰ですか？"}
+]
+```
+
+そして、`client.chat.completions.create`というメソッドによってメッセージの送信を行います。
+
+Claudeを使う場合は以下のようになります。
+
+```{python}
+response = client.chat.completions.create(
+        model=claude3opus,
+        messages=messages
+    )
+print(response.choices[0].message.content)
+```
+
+GPT-4oを使う場合は以下のようになります。
+```{python}
+response = client.chat.completions.create(
+        model=gpt4o,
+        messages=messages
+    )
+print(response.choices[0].message.content)
+```
+
+ここで、両者が異なるのは`model`の値のみである点に注目してください。プロバイダやモデルを変えたい場合はここを書き換えるだけでよく、差分が最小化されていることがわかります。
+
+LLMの性能比較を行う際など、複数のLLMを呼び出して応答を得たい場面で有用ではないかと思います。また、シンプルに綺麗なインターフェースで使いやすいので、さらに機能が追加されて活用できる場面が広がると嬉しいですね。
+
+## 補足

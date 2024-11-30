@@ -2,4 +2,4 @@
 title: "ExeMaria"
 ---
 
-[Mathbullet](https://www.youtube.com/@mathbullet) in text modality
+mathbullet in text modality

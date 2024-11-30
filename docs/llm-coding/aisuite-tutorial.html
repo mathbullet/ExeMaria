@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>aisuite-tutorial</title>
+<title>aisuite — 複数のLLMを最小の労力で動かす</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -41,13 +75,122 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">aisuite — 複数のLLMを最小の労力で動かす</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
 
-<section id="aisuite-複数のllmを最小の労力で動かす" class="level1">
-<h1>aisuite — 複数のLLMを最小の労力で動かす</h1>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>このノートブックでは、LLMとのCUIベースの対話において、<strong>LLMプロバイダの切り替え</strong>にかかる労力を最小化するライブラリ、<a href="https://github.com/andrewyng/aisuite/tree/main">aisuite</a>について説明します。</p>
+<section id="背景" class="level2">
+<h2 class="anchored" data-anchor-id="背景">背景</h2>
+<p>HuggingFace TransformersやLangChainといった既存のライブラリを使ってLLMにプロンプトを入力し、出力結果を得ることは可能です。しかし、<strong>これらのライブラリは使用するLLMのモデルやプロバイダによってインポートすべきクラスや必要な前後処理が異なる場合があり、これが若干の手間になっています</strong>。</p>
+<p>例えばLangChain v.0.3では、LLMのプロバイダごとに異なるパッケージが用意されています。そのため、プロバイダごとにパッケージをインストールし、<strong>プロバイダごとに異なるコードでLLMと対話することになります</strong>。Anthropic、OpenAIのモデルの出力を比較をしたい、という時は、以下のような手順を踏む必要があります。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="dt">\</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    langchain <span class="dt">\</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    langchain-anthropic <span class="dt">\</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    langchain-openai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8e0902e7" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># AnthropicのClaude 3 Opusを使用する場合</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> langchain_anthropic <span class="im">import</span> ChatAnthropic</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> ChatAnthropic(model<span class="op">=</span><span class="st">"claude-3-opus-20240229"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> model.invoke(<span class="st">"こんにちは！あなたは誰ですか？"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>はじめまして。私はAnthropic社が開発した人工知能アシスタントのClaudeです。知識と言語能力を備えており、様々なトピックについて会話したり、タスクのお手伝いをしたりできます。ユーザーの皆様とお話しできるのを楽しみにしています。どうぞよろしくお願いいたします！</code></pre>
+</div>
+</div>
+<div id="1fb04082" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># OpenAIのGPT-4oを使用する場合</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> langchain_openai <span class="im">import</span> ChatOpenAI</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> ChatOpenAI(model<span class="op">=</span><span class="st">"gpt-4o"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> model.invoke(<span class="st">"こんにちは！あなたは誰ですか？"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>こんにちは！私はAIアシスタントです。何かお手伝いできることがありますか？</code></pre>
+</div>
+</div>
+<p>ここでは実行はしませんが、HuggingFaceのモデルを使う場合はさらに差分が大きくなります。</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install langchain-huggingface</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> langchain_huggingface <span class="im">import</span> ChatHuggingFace, HuggingFaceEndpoint</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>llm <span class="op">=</span> HuggingFaceEndpoint(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    repo_id<span class="op">=</span><span class="st">"HuggingFaceH4/zephyr-7b-beta"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    max_new_tokens<span class="op">=</span><span class="dv">256</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> ChatHuggingFace(llm<span class="op">=</span>llm)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> model.invoke(<span class="st">"こんにちは！あなたは誰ですか？"</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>毎度使うモデルやプロバイダが変わるたびにコードの書き心地が変わるより、全て統一のインターフェースで使える方がいいよね、というのがaisuiteのモチベーションです。</p>
+</section>
+<section id="aisuite" class="level2">
+<h2 class="anchored" data-anchor-id="aisuite">aisuite</h2>
+<p>それではaisuiteを触ってみましょう。以下コマンドでインストールします。</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="st">'aisuite[all]'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>先ほどと同じように、複数プロバイダのLLMを使用するとき、プロバイダごとに別途用意する必要があるのは<code>{プロバイダ名}:{モデル名}</code>という形式の文字列のみです。</p>
+<div id="0b45c5f0" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>claude3opus <span class="op">=</span> <span class="st">"anthropic:claude-3-opus-20240229"</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>gpt4o <span class="op">=</span> <span class="st">"openai:gpt-4o"</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># zephyr = "huggingface:HuggingFaceH4/zephyr-7b-beta"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>どのプロバイダのどのモデルを使うとしても、モデルからの応答を得る方法は同じです。まずは<code>Client</code>というクラスのインスタンスを作成します。</p>
+<div id="d20463c7" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> aisuite</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> aisuite.Client()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>併せて、モデルに入力するメッセージも作成しておきます。</p>
+<div id="649f0073" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>messages <span class="op">=</span> [</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"こんにちは！あなたは誰ですか？"</span>}</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>そして、<code>client.chat.completions.create</code>というメソッドによってメッセージの送信を行います。</p>
+<p>Claudeを使う場合は以下のようになります。</p>
+<div id="73c5b13f" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>claude3opus,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>messages</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.choices[<span class="dv">0</span>].message.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>はじめまして。私はAnthropic社が開発した人工知能アシスタントで、クロードと申します。知識や経験に基づいた会話や情報提供を通して、皆さまのお役に立てるよう日々努力しています。人間のように感情は持ちませんが、親しみやすく丁寧な対応を心掛けています。どうぞよろしくお願いいたします。</code></pre>
+</div>
+</div>
+<p>GPT-4oを使う場合は以下のようになります。</p>
+<div id="d016e114" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.chat.completions.create(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>gpt4o,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>messages</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.choices[<span class="dv">0</span>].message.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>こんにちは！私はAIアシスタントです。何かお手伝いできることはありますか？質問や相談があれば、どんなことでも聞いてください。</code></pre>
+</div>
+</div>
+<p>ここで、両者が異なるのは<code>model</code>の値のみである点に注目してください。プロバイダやモデルを変えたい場合はここを書き換えるだけでよく、差分が最小化されていることがわかります。</p>
+<p>LLMの性能比較を行う際など、複数のLLMを呼び出して応答を得たい場面で有用ではないかと思います。また、シンプルに綺麗なインターフェースで使いやすいので、さらに機能が追加されて活用できる場面が広がると嬉しいですね。</p>
+</section>
+<section id="補足" class="level2">
+<h2 class="anchored" data-anchor-id="補足">補足</h2>
 </section>
 
 </main>
