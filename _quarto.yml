@@ -10,10 +10,13 @@ website:
         text: Home
       - about.qmd
   sidebar:
-    search: true
     contents:
-      href: llm-coding/aisuite-tutorial.qmd
-      text: aisuiteチュートリアル
+      - section: "大規模言語モデル"
+        contents:
+          - section: "Coding"
+            contents:
+              - text: "aisuite"
+                href: "llm-coding/aisuite-tutorial.html"
 
 format:
   html:
