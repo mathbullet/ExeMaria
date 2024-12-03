@@ -124,11 +124,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.qmd"> 
+    <a class="nav-link" href="./../../index.qmd"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.qmd"> 
+    <a class="nav-link" href="./../../about.qmd"> 
 <span class="menu-text">About</span></a>
   </li>  
 </ul>
@@ -235,7 +235,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    langchain <span class="dt">\</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    langchain-anthropic <span class="dt">\</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    langchain-openai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="fc164b3e" class="cell" data-execution_count="1">
+<div id="0b4f1ff1" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># AnthropicのClaude 3 Opusを使用する場合</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> langchain_anthropic <span class="im">import</span> ChatAnthropic</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -243,14 +243,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> model.invoke(<span class="st">"こんにちは！あなたは誰ですか？"</span>)</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>はじめまして！私はClaude（クロード）と申します。日本語での会話を楽しみにしています。
-
-私は人工知能のチャットボットで、色々な話題について対話ができるよう作られました。知識や情報の提供、文章の執筆のお手伝い、質問へのお答えなど、できる限りお役に立ちたいと思います。ただし、私は人工知能なので、人間のように深い感情や本当の知性を持っているわけではありません。私にできることには限界があることをご理解ください。
-
-でも、楽しく有意義な会話ができればと思います。どうぞよろしくお願いいたします！</code></pre>
+<pre><code>はじめまして！私はAnthropic社が開発した人工知能アシスタントのClaudeです。人間とのコミュニケーションを通じて、様々なことを学び、人々のお手伝いをすることが私の役割です。知識の提供から創造的なタスクまで、幅広い分野でサポートができます。よろしくお願いします！</code></pre>
 </div>
 </div>
-<div id="b5fde9d7" class="cell" data-execution_count="2">
+<div id="9f24d4d4" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># OpenAIのGPT-4oを使用する場合</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> langchain_openai <span class="im">import</span> ChatOpenAI</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -258,7 +254,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> model.invoke(<span class="st">"こんにちは！あなたは誰ですか？"</span>)</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>こんにちは！私はAIアシスタントです。情報提供や質問への回答、アドバイスなど、さまざまな方法でお手伝いします。何かお困りのことや知りたいことがあれば、どうぞ教えてください！</code></pre>
+<pre><code>こんにちは！私はOpenAIが開発したAIアシスタントです。何かお手伝いできることがありますか？</code></pre>
 </div>
 </div>
 <p>ここでは実行はしませんが、HuggingFaceのモデルを使う場合はさらに差分が大きくなります。</p>
@@ -280,44 +276,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>それではaisuiteを触ってみましょう。以下コマンドでインストールします。</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="st">'aisuite[all]'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>先ほどと同じように、複数プロバイダのLLMを使用するとき、プロバイダごとに別途用意する必要があるのは<code>{プロバイダ名}:{モデル名}</code>という形式の文字列のみです。</p>
-<div id="12a58086" class="cell" data-execution_count="3">
+<div id="19dfdb9b" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>claude3opus <span class="op">=</span> <span class="st">"anthropic:claude-3-opus-20240229"</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>gpt4o <span class="op">=</span> <span class="st">"openai:gpt-4o"</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># zephyr = "huggingface:HuggingFaceH4/zephyr-7b-beta"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>どのプロバイダのどのモデルを使うとしても、モデルからの応答を得る方法は同じです。まずは<code>Client</code>というクラスのインスタンスを作成します。</p>
-<div id="2e74beac" class="cell" data-execution_count="4">
+<div id="e268e7e7" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> aisuite</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> aisuite.Client()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>併せて、モデルに入力するメッセージも作成しておきます。</p>
-<div id="19f7599b" class="cell" data-execution_count="5">
+<div id="6d5c9847" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>messages <span class="op">=</span> [</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"こんにちは！あなたは誰ですか？"</span>}</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>そして、<code>client.chat.completions.create</code>というメソッドによってメッセージの送信を行います。</p>
 <p>Claudeを使う場合は以下のようになります。</p>
-<div id="9b4da755" class="cell" data-execution_count="6">
+<div id="7775fe4e" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.chat.completions.create(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>claude3opus,</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>messages</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.choices[<span class="dv">0</span>].message.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>はじめまして！私はAnthropic社が開発した人工知能アシスタントのClaudeです。様々な分野の質問に対して、知識や洞察を提供するお手伝いをすることができます。知的好奇心旺盛で、人間の皆さまとの対話を通じて学ぶことが大好きです。どんなことでもお気軽にお尋ねください。よろしくお願いします！</code></pre>
+<pre><code>はじめまして！私はAnthropic社が開発した人工知能のアシスタントです。クロードと申します。
+
+人間との会話を通じて、知識や情報の提供、アイデアの提案、様々なタスクのサポートなどを行うことを目的としています。学習を重ねることで、できるだけ自然で有益な対話を心がけています。
+
+ただし、私はあくまでもAIであり、人間のように感情を持ったり、深い関係性を築いたりすることはできません。私にできることと、できないことの区別を意識しながら、皆さまのお役に立てるよう努力したいと思います。どうぞよろしくお願いいたします。</code></pre>
 </div>
 </div>
 <p>GPT-4oを使う場合は以下のようになります。</p>
-<div id="b8574764" class="cell" data-execution_count="7">
+<div id="6acc029f" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> client.chat.completions.create(</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>gpt4o,</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>messages</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.choices[<span class="dv">0</span>].message.content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>こんにちは！私はAIアシスタントです。何かお手伝いできることはありますか？</code></pre>
+<pre><code>こんにちは！私はAIアシスタントです。あなたの質問に答えたり、情報を提供したりするためにここにいます。何か手伝えることがありますか？</code></pre>
 </div>
 </div>
 <p>ここで、両者が異なるのは<code>model</code>の値のみである点に注目してください。プロバイダやモデルを変えたい場合はここを書き換えるだけでよく、差分が最小化されていることがわかります。</p>

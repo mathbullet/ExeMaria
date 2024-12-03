@@ -1,14 +1,14 @@
 project:
   type: website
-  output-dir: docs
+  output-dir: .
 
 website:
   title: "ExeMaria"
   navbar:
     left:
-      - href: index.qmd
+      - href: ../../index.qmd
         text: Home
-      - href: about.qmd
+      - href: ../../about.qmd
         text: About
   sidebar:
     contents:
