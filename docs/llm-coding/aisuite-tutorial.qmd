@@ -8,7 +8,7 @@ format:
     code-fold: false
 ---
 
-このノートブックでは、LLMとのCUIベースの対話において、**LLMプロバイダの切り替え**にかかる労力を最小化するライブラリ、[aisuite](https://github.com/andrewyng/aisuite/tree/main)について説明します。
+このノートブックでは、LLMとのCUIベースの対話において、**LLMプロバイダやモデルの切り替え**にかかる労力を最小化するライブラリ、[aisuite](https://github.com/andrewyng/aisuite/tree/main)について説明します。
 
 ## 背景
 
@@ -60,7 +60,6 @@ response = model.invoke("こんにちは！あなたは誰ですか？")
 print(response.content)
 ```
 
-
 毎度使うモデルやプロバイダが変わるたびにコードの書き心地が変わるより、全て統一のインターフェースで使える方がいいよね、というのがaisuiteのモチベーションです。
 
 ## aisuite
@@ -108,6 +107,7 @@ print(response.choices[0].message.content)
 ```
 
 GPT-4oを使う場合は以下のようになります。
+
 ```{python}
 response = client.chat.completions.create(
         model=gpt4o,
